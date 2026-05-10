@@ -540,4 +540,3 @@ class TestSearchOfficialFields:
                 result = _search_official_fields('テストイベント', 2026)
         assert result['location'] == '大阪城ホール'
         assert result['date'] is None
-
