@@ -30,7 +30,7 @@ describe('App', () => {
       events: [
         {
           event_title: 'Sample Event',
-          event_date: '2025-06-01',
+          event_date: '2099-12-31',
           event_time: null,
           event_location: null,
           event_description: 'Sample description',

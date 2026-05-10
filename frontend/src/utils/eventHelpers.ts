@@ -24,3 +24,7 @@ export function filterByCategories(events: HarvestEvent[], selected: Set<string>
   if (selected.size === 0) return events
   return events.filter(e => selected.has(e.category))
 }
+
+export function filterUpcomingEvents(events: HarvestEvent[], today: string): HarvestEvent[] {
+  return events.filter(e => e.event_date !== null && e.event_date >= today)
+}
