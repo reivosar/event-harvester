@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { stripHtml, formatDate, sortByDate, filterByCategories } from '../utils/eventHelpers'
+import { stripHtml, formatDate, sortByDate, filterByCategories, filterUpcomingEvents } from '../utils/eventHelpers'
 import type { HarvestEvent } from '../types'
 
 const makeEvent = (overrides: Partial<HarvestEvent> = {}): HarvestEvent => ({
@@ -88,5 +88,43 @@ describe('filterByCategories', () => {
   it('returns empty array when no events match selected categories', () => {
     const events = [makeEvent({ category: 'A' })]
     expect(filterByCategories(events, new Set(['B']))).toHaveLength(0)
+  })
+})
+
+describe('filterUpcomingEvents', () => {
+  it('keeps an event whose date is today', () => {
+    const events = [makeEvent({ event_date: '2026-05-10' })]
+    expect(filterUpcomingEvents(events, '2026-05-10')).toHaveLength(1)
+  })
+
+  it('keeps an event whose date is in the future', () => {
+    const events = [makeEvent({ event_date: '2026-12-31' })]
+    expect(filterUpcomingEvents(events, '2026-05-10')).toHaveLength(1)
+  })
+
+  it('removes an event whose date is in the past', () => {
+    const events = [makeEvent({ event_date: '2026-05-09' })]
+    expect(filterUpcomingEvents(events, '2026-05-10')).toHaveLength(0)
+  })
+
+  it('removes an event whose date is null', () => {
+    const events = [makeEvent({ event_date: null })]
+    expect(filterUpcomingEvents(events, '2026-05-10')).toHaveLength(0)
+  })
+
+  it('returns an empty array when given an empty array', () => {
+    expect(filterUpcomingEvents([], '2026-05-10')).toHaveLength(0)
+  })
+
+  it('filters mixed events, keeping only upcoming ones', () => {
+    const events = [
+      makeEvent({ event_date: '2026-05-09' }),
+      makeEvent({ event_date: '2026-05-10' }),
+      makeEvent({ event_date: '2026-06-01' }),
+      makeEvent({ event_date: null }),
+    ]
+    const result = filterUpcomingEvents(events, '2026-05-10')
+    expect(result).toHaveLength(2)
+    expect(result.every(e => e.event_date !== null && e.event_date >= '2026-05-10')).toBe(true)
   })
 })

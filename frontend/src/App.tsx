@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react'
 import { useEvents } from './hooks/useEvents'
 import { CategoryFilter } from './components/CategoryFilter'
 import { EventList } from './components/EventList'
-import { sortByDate, filterByCategories } from './utils/eventHelpers'
+import { sortByDate, filterByCategories, filterUpcomingEvents } from './utils/eventHelpers'
 import { CATEGORIES } from './constants'
 
 export default function App() {
@@ -26,9 +26,10 @@ export default function App() {
     })
   }
 
+  const today = new Date().toISOString().split('T')[0]
   const displayed = useMemo(
-    () => sortByDate(filterByCategories(events, selected)),
-    [events, selected]
+    () => sortByDate(filterByCategories(filterUpcomingEvents(events, today), selected)),
+    [events, selected, today]
   )
 
   return (
