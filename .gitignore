@@ -40,8 +40,8 @@ coverage/
 .nyc_output/
 .pytest_cache/
 
-# Worktrees (Claude Code)
-.claude/worktrees/
+# Claude Code (entire directory — not tracked)
+.claude/
 
 # Session trash (Claude Code)
 .trash/
