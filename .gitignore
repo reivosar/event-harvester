@@ -1,0 +1,55 @@
+# Secrets & environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+vendor/
+
+# Build output
+dist/
+build/
+out/
+
+# Generated pipeline output
+backend/output/
+*.o
+*.a
+*.so
+
+# OS & editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Test coverage
+coverage/
+.nyc_output/
+.pytest_cache/
+
+# Worktrees (Claude Code)
+.claude/worktrees/
+
+# Session trash (Claude Code)
+.trash/
+
+# Serena MCP workspace index
+.serena/
+
+# Frontend
+frontend/public/events.json
+frontend/node_modules/
+frontend/dist/

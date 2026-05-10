@@ -1,0 +1,152 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git branch)",
+      "Bash(git branch -a*)",
+      "Bash(git branch -l*)",
+      "Bash(git branch -r*)",
+      "Bash(git branch -v*)",
+      "Bash(git branch --list*)",
+      "Bash(git branch -d *)",
+      "Bash(git stash)",
+      "Bash(git stash push*)",
+      "Bash(git stash pop*)",
+      "Bash(git stash list*)",
+      "Bash(git stash show*)",
+      "Bash(git stash apply*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git checkout*)",
+      "Bash(git switch*)",
+      "Bash(git push*)",
+      "Bash(git merge*)",
+      "Bash(git fetch*)",
+      "Bash(git pull*)",
+      "Bash(git worktree*)",
+      "Bash(ls*)",
+      "Bash(find . *)",
+      "Bash(grep*)",
+      "Bash(cat*)",
+      "Bash(echo*)",
+      "Bash(pwd)",
+      "Bash(which*)",
+      "Bash(npm run*)",
+      "Bash(npm test*)",
+      "Bash(npm install*)",
+      "Bash(npx*)",
+      "Bash(node*)",
+      "Bash(python*)",
+      "Bash(pip*)",
+      "Bash(make*)",
+      "Bash(gh issue*)",
+      "Bash(gh pr*)",
+      "Bash(gh repo*)",
+      "Bash(.claude/hooks/trash.sh*)",
+      "Bash(chmod +x .claude/hooks/*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push* main)",
+      "Bash(git push* origin main)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(sudo rm*)",
+      "Bash(curl * | bash*)",
+      "Bash(wget * | bash*)",
+      "Bash(python*os.remove*)",
+      "Bash(python*os.unlink*)",
+      "Bash(python*os.rmdir*)",
+      "Bash(python*shutil.rmtree*)",
+      "Bash(python*shutil.move*)",
+      "Bash(python*pathlib*unlink*)",
+      "Bash(python*pathlib*rmdir*)",
+      "Bash(node*unlink*)",
+      "Bash(node*rmSync*)",
+      "Bash(node*rmdir*)",
+      "Bash(node*rimraf*)",
+      "Bash(npx*rimraf*)",
+      "Bash(ruby*File.delete*)",
+      "Bash(ruby*FileUtils.rm*)",
+      "Bash(ruby*FileUtils.move*)",
+      "Bash(perl*unlink*)",
+      "Bash(perl*rmdir*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-bash.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-commit.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-write.sh"
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-edit.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-edit.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-edit.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/notify.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/on-stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

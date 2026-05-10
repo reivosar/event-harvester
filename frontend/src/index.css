@@ -1,0 +1,99 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  background: #f5f5f5;
+  color: #1a1a1a;
+  line-height: 1.6;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.app-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.app-header h1 { font-size: 1.8rem; }
+.event-count { color: #666; font-size: 0.9rem; }
+
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.category-btn {
+  padding: 6px 14px;
+  border: 1.5px solid #555;
+  border-radius: 999px;
+  background: transparent;
+  color: #333;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+
+.category-btn.active {
+  background: #333;
+  color: #fff;
+}
+
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.event-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category-badge {
+  font-size: 0.75rem;
+  color: #666;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 2px 6px;
+  align-self: flex-start;
+}
+
+.event-title {
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.event-meta { font-size: 0.875rem; color: #444; }
+.event-time { margin-left: 4px; }
+.event-location { font-size: 0.875rem; color: #555; }
+.event-description { font-size: 0.85rem; color: #666; }
+
+.event-link {
+  margin-top: auto;
+  font-size: 0.85rem;
+  color: #0066cc;
+  text-decoration: none;
+}
+.event-link:hover { text-decoration: underline; }
+
+.state-message {
+  text-align: center;
+  padding: 48px;
+  color: #666;
+}
+.state-message.error { color: #cc0000; }
