@@ -1,4 +1,3 @@
-import json
 from datetime import date, timedelta
 from unittest.mock import MagicMock
 
@@ -7,7 +6,6 @@ import requests
 
 from src.scrapers.connpass import ConnpassScraper
 from src.scrapers.doorkeeper import DoorkeeperScraper
-from src.scrapers.peatix import PeatixScraper
 from src.scrapers import fetch_all_scrapers
 
 FUTURE_DATE = (date.today() + timedelta(days=30)).isoformat()
@@ -150,63 +148,6 @@ class TestDoorkeeperScraper:
         }])
         events = DoorkeeperScraper(session=session).fetch("テスト", "テスト")
         assert events[0].event_location == "東京都渋谷区"
-
-
-class TestPeatixScraper:
-
-    def _html_with_jsonld(self, event_data: dict) -> str:
-        return (
-            '<html><head>'
-            '<script type="application/ld+json">'
-            + json.dumps(event_data)
-            + '</script>'
-            '</head><body></body></html>'
-        )
-
-    def test_fetch_returns_future_event_from_jsonld(self):
-        html = self._html_with_jsonld({
-            "@type": "Event",
-            "name": "アール・ブリュット展示会",
-            "startDate": f"{FUTURE_DATE}T10:00:00+09:00",
-            "url": "https://peatix.com/event/123",
-            "location": {"name": "東京都美術館"},
-            "description": "アール・ブリュット作品展示",
-        })
-        session = _mock_session(text=html)
-        events = PeatixScraper(session=session).fetch("アール・ブリュット", "アール・ブリュット関連")
-        assert len(events) == 1
-        e = events[0]
-        assert e.event_title == "アール・ブリュット展示会"
-        assert e.event_date == FUTURE_DATE
-        assert e.event_time == "10:00"
-        assert e.event_location == "東京都美術館"
-
-    def test_fetch_excludes_past_events(self):
-        html = self._html_with_jsonld({
-            "@type": "Event",
-            "name": "過去イベント",
-            "startDate": f"{PAST_DATE}T10:00:00+09:00",
-            "url": "https://peatix.com/event/999",
-        })
-        session = _mock_session(text=html)
-        events = PeatixScraper(session=session).fetch("テスト", "テスト")
-        assert len(events) == 0
-
-    def test_fetch_ignores_non_event_jsonld(self):
-        html = self._html_with_jsonld({"@type": "Organization", "name": "テスト組織"})
-        session = _mock_session(text=html)
-        events = PeatixScraper(session=session).fetch("テスト", "テスト")
-        assert len(events) == 0
-
-    def test_fetch_returns_empty_on_http_error(self):
-        session = _mock_session(status_code=403)
-        events = PeatixScraper(session=session).fetch("テスト", "テスト")
-        assert events == []
-
-    def test_fetch_returns_empty_when_no_jsonld(self):
-        session = _mock_session(text="<html><body>イベントなし</body></html>")
-        events = PeatixScraper(session=session).fetch("テスト", "テスト")
-        assert len(events) == 0
 
 
 class TestFetchAllScrapers:

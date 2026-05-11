@@ -2,12 +2,10 @@ from ..models import Event
 from .base import EventScraper
 from .connpass import ConnpassScraper
 from .doorkeeper import DoorkeeperScraper
-from .peatix import PeatixScraper
 
 _DEFAULT_SCRAPERS: list[EventScraper] = [
     ConnpassScraper(),
     DoorkeeperScraper(),
-    PeatixScraper(),
 ]
 
 
