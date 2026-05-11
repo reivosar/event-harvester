@@ -5,8 +5,9 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from extract import process_article
-from src.rss_fetcher import fetch_all
+from src.rss_fetcher import fetch_all, CATEGORIES
 from src.models import Event
+from src.scrapers import fetch_all_scrapers
 
 OUTPUT_PATH = Path(__file__).parent / "output" / "events.json"
 
@@ -94,8 +95,9 @@ def main():
     articles = deduplicate_articles(articles)
     print(f"After pre-dedup: {len(articles)} articles\n")
 
-    events = articles_to_events(articles)
-    events = deduplicate(events)
+    rss_events = articles_to_events(articles)
+    scraper_events = fetch_all_scrapers(CATEGORIES)
+    events = deduplicate(rss_events + scraper_events)
     print(f"After deduplication: {len(events)} events\n")
 
     OUTPUT_PATH.parent.mkdir(exist_ok=True)
