@@ -2,14 +2,11 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
-import json
 import pytest
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from src.rss_fetcher import CATEGORIES
 from src.event_parser import SYSTEM_PROMPT, _build_prompt
-from src.models import Event
-from main import _normalize_title, articles_to_events, main
+from main import _normalize_title, articles_to_events
 
 EXPECTED_CATEGORIES = [
     "震災関連",
@@ -177,76 +174,3 @@ class TestArticlesToEvents:
 
     def test_empty_list(self):
         assert articles_to_events([]) == []
-
-
-# ── main ──────────────────────────────────────────────────
-
-_SAMPLE_SCRAPER_EVENT = Event(
-    event_title="スクレイパーイベント",
-    event_date="2026-07-01",
-    event_time="10:00",
-    event_location="東京",
-    event_description="テスト",
-    source_url="https://connpass.com/event/1/",
-    category="シンポジウム関連",
-    is_event=True,
-)
-
-
-class TestMain:
-
-    def test_main_merges_rss_and_scraper_events(self, tmp_path):
-        rss_event = Event(
-            event_title="RSSイベント",
-            event_date="2026-06-01",
-            event_time=None,
-            event_location="大阪",
-            event_description="RSS由来",
-            source_url="https://example.com/rss",
-            category="防災関連",
-            is_event=True,
-        )
-        output_file = tmp_path / "events.json"
-        with (
-            patch("main.fetch_all", return_value=[]),
-            patch("main.articles_to_events", return_value=[rss_event]),
-            patch("main.fetch_all_scrapers", return_value=[_SAMPLE_SCRAPER_EVENT]),
-            patch("main.OUTPUT_PATH", output_file),
-        ):
-            main()
-        data = json.loads(output_file.read_text(encoding="utf-8"))
-        titles = {e["event_title"] for e in data}
-        assert "RSSイベント" in titles
-        assert "スクレイパーイベント" in titles
-
-    def test_main_deduplicates_across_sources(self, tmp_path):
-        duplicate = Event(
-            event_title="重複イベント",
-            event_date="2026-06-01",
-            event_time=None,
-            event_location="東京",
-            event_description="RSS由来",
-            source_url="https://example.com/dup",
-            category="防災関連",
-            is_event=True,
-        )
-        scraper_dup = Event(
-            event_title="重複イベント",
-            event_date="2026-06-01",
-            event_time=None,
-            event_location="東京",
-            event_description="スクレイパー由来",
-            source_url="https://connpass.com/event/99/",
-            category="防災関連",
-            is_event=True,
-        )
-        output_file = tmp_path / "events.json"
-        with (
-            patch("main.fetch_all", return_value=[]),
-            patch("main.articles_to_events", return_value=[duplicate]),
-            patch("main.fetch_all_scrapers", return_value=[scraper_dup]),
-            patch("main.OUTPUT_PATH", output_file),
-        ):
-            main()
-        data = json.loads(output_file.read_text(encoding="utf-8"))
-        assert len([e for e in data if e["event_title"] == "重複イベント"]) == 1

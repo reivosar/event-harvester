@@ -3,4 +3,3 @@ feedparser
 python-dotenv
 googlenewsdecoder
 ddgs
-requests
