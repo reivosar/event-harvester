@@ -40,7 +40,11 @@ coverage/
 .nyc_output/
 .pytest_cache/
 
+<<<<<<< fix/filter-past-and-unknown-events
+# Claude Code (entire directory — not tracked)
+=======
 # Claude Code (local only)
+>>>>>>> main
 .claude/
 
 # Session trash (Claude Code)
